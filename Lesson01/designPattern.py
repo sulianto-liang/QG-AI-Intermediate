@@ -12,3 +12,4 @@ class ModelFactory:
 # Create different models easily
 print(ModelFactory.create_model("simple"))
 print(ModelFactory.create_model("advanced"))
+print(ModelFactory.create_model("whatever"))
