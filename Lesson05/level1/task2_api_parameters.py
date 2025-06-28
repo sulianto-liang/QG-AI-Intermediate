@@ -1,5 +1,6 @@
 # File: task2_api_parameters.py
 import requests
+import json
 
 class IndonesianCityAPI:
     def __init__(self):
@@ -35,7 +36,7 @@ class IndonesianCityAPI:
 
         urlProv = self.base_url + '/provinces.json'
         urlCity = self.base_url + '/regencies/'
-
+        found =[]
         try:
             respProv = requests.get(urlProv, headers=self.header)
             if respProv.status_code==200:
@@ -43,15 +44,18 @@ class IndonesianCityAPI:
                     respCity = requests.get(urlCity+prov['id']+'.json', headers=self.header)
                     if respCity.status_code==200:
                         for j, city in enumerate(respCity.json()):
-                            if city['name'].upper()==city_name.upper():
+                            if city_name.upper() in city['name'].upper():
                                 city['province'] = prov['name']
-                                return city
+                                found.append(city)
                     else:
                         print(f"❌ Error: Status code {respCity.status_code}")
             else:
                 print(f"❌ Error: Status code {respProv.status_code}")
+
         except Exception as e:
             print(f"❌ Error: {e}")
+
+        return found
 
 
 # TODO: Get cities from West Java (ID: 32) and search for "Bandung"
@@ -67,4 +71,4 @@ print("")
 print("========================")
 print("Search Bandung city")
 print("========================")
-print(IndoCityAPI.search_city_by_name("Kota Bandung"))
+print(json.dumps(IndoCityAPI.search_city_by_name("Bandung"),indent=4))
